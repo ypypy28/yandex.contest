@@ -73,39 +73,13 @@ with open("input.txt") as f:
 
 res_idx = -1
 candidate_idx = max(brackets.values(), key=len)
-print(f"{brackets=}", ''.join(merged_brackets(brackets["{"], brackets["}"])))
-print(f"{candidate_idx=}")
+# print(f"{brackets=}", ''.join(merged_brackets(brackets["{"], brackets["}"])))
+# print(f"{candidate_idx=}")
 for i in candidate_idx:
     seq = ''.join(merged_brackets(brackets["{"], brackets["}"], ignore=i))
-    print(f"ignore={i}, {seq=}")
+    # print(f"ignore={i}, {seq=}")
     if is_valid_sequence(seq):
         res_idx = i
         break
 
 print(res_idx)
-
-# for br, i in merged_brackets(brackets["{"], brackets["}"]):
-#     if not opening_stack:
-#         if br == "}":
-#             if res_idx == -1:
-#                 res_idx = i
-#             else:
-#                 break
-#         else:
-#             opening_stack.append(i)
-#     else:
-#         if br == "{":
-#             opening_stack.append(i)
-#         else:
-#             opening_stack.pop()
-
-# if not opening_stack:
-#     print(res_idx)
-# elif len(opening_stack) == 1:
-#     print(opening_stack[0])
-# else:
-#     print(-1)
-# print(f"{res_idx=} {opening_stack=}")
-# # print(-1 if len(opening_stack) != 1 else max(res_idx, opening_stack[0]))
-
-# print(''.join(br for br, _ in merged_brackets(brackets["{"], brackets["}"])))
