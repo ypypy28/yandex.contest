@@ -1,8 +1,8 @@
-CHUNK_SIZE = 32
+CHUNK_SIZE = 1024
 brackets = {"{": [], "}": []}
 
 
-def merged_brackets(open_brs, close_brs, ignore):
+def merged_brackets(open_brs, close_brs, ignore=None):
     i = j = 0
     end_i, end_j = (len(brs) for brs in (open_brs, close_brs))
     while i < end_i and j < end_j:
@@ -66,13 +66,25 @@ with open("input.txt") as f:
             break
         extract_br_positions(tmp, pos)
         pos += CHUNK_SIZE
+        del tmp
 
 res_idx = -1
-candidate_idx = max((brackets["{"], brackets["}"]), key=len)
-for i in candidate_idx:
-    seq = ''.join(merged_brackets(brackets["{"], brackets["}"], ignore=i))
-    if is_valid_sequence(seq):
-        res_idx = i
-        break
+# candidate_idx = max((brackets["{"], brackets["}"]), key=len)
+candidate_idx = None
+opens, closes = len(brackets["{"]), len(brackets["}"])
+if opens - closes not in (-1, 1):
+    pass
+elif opens > closes:
+    candidate_idx = brackets["{"]
+else:
+    candidate_idx = brackets["}"]
+
+if candidate_idx:
+    for i in candidate_idx:
+        seq = ''.join(merged_brackets(brackets["{"], brackets["}"], ignore=i))
+        if is_valid_sequence(seq):
+            res_idx = i
+            break
+        del seq
 
 print(res_idx)
