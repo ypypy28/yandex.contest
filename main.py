@@ -46,20 +46,17 @@ def extract_br_positions(line: str, pos: int) -> None:
 
 
 def is_valid_sequence(seq: Iterable) -> bool:
-    opening_stack: list[int] = []
+    opening_count = 0
     for br in seq:
-        if not opening_stack:
-            if br == "}":
+        if br == "{":
+            opening_count += 1
+        else:
+            if not opening_count:
                 return False
             else:
-                opening_stack.append(br)
-        else:
-            if br == "{":
-                opening_stack.append(br)
-            else:
-                opening_stack.pop()
+                opening_count -= 1
 
-    return True if not opening_stack else False
+    return True if not opening_count else False
 
 
 with open("input.txt") as f:
