@@ -2,48 +2,48 @@ import sys
 import array
 
 
-CHUNK_SIZE = 8092
 bad_close_idx = None
 saving_close = None
-open_stack = array.array('L', [0]*556000)
-# open_stack = array.array('I')
+open_stack = [0]*578576
+# tmp = [0]*578576
+# open_stack = array.array('L', tmp)
+# del tmp
 stack_i = -1
 with open("input.txt", mode="rb", buffering=0) as f:
     pos = 1
     while True:
-        tmp = f.read(CHUNK_SIZE)
-        if not tmp:
+        ch = f.read(1)
+        if not ch:
             break
 
-        for i, ch in enumerate(tmp):
-            if ch == 123:  # ord("{") = 123
-                stack_i += 1
-                if stack_i < len(open_stack):
-                    open_stack[stack_i] = i+pos
+        if ch == b"{":  # ord("{") = 123
+            stack_i += 1
+            if stack_i < len(open_stack):
+                open_stack[stack_i] = pos
+            else:
+                open_stack.append(pos)
+            # open_stack.append(i+pos)
+            # print(f"{ch=} {open_stack=} {bad_close_idx=} {saving_close=}")
+        elif ch == b"}":  # ord("}") = 125
+            # if open_stack:
+            if stack_i > -1:
+                # open_stack.pop()
+                stack_i -= 1
+                if not saving_close:
+                    try:
+                        saving_close = pos
+                    except ValueError:
+                        pass
+            else:
+                if not bad_close_idx:
+                    bad_close_idx = pos
                 else:
-                    open_stack.append(i+pos)
-                # open_stack.append(i+pos)
-                # print(f"{ch=} {open_stack=} {bad_close_idx=} {saving_close=}")
-            elif ch == 125:  # ord("}") = 125
-                # if open_stack:
-                if stack_i > -1:
-                    # open_stack.pop()
-                    stack_i -= 1
-                    if not saving_close:
-                        try:
-                            saving_close = i + pos
-                        except ValueError:
-                            pass
-                else:
-                    if not bad_close_idx:
-                        bad_close_idx = i + pos
-                    else:
-                        print(-1)
-                        sys.exit(0)
-                # print(f"{ch=} {open_stack=} {bad_close_idx=} {saving_close=}")
+                    print(-1)
+                    sys.exit(0)
+            # print(f"{ch=} {open_stack=} {bad_close_idx=} {saving_close=}")
 
-        pos += CHUNK_SIZE
-        del tmp
+        pos += 1
+        del ch
 
 # if len(open_stack) == 1:
 if stack_i == 0:
