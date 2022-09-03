@@ -18,16 +18,10 @@ with open("input.txt", mode="rb", buffering=0) as f:
 
         if ch == b"{":  # ord("{") = 123
             stack_i += 1
-            if stack_i < len(open_stack):
-                open_stack[stack_i] = pos
-            else:
-                open_stack.append(pos)
-            # open_stack.append(i+pos)
+            open_stack[stack_i] = pos
             # print(f"{ch=} {open_stack=} {bad_close_idx=} {saving_close=}")
         elif ch == b"}":  # ord("}") = 125
-            # if open_stack:
             if stack_i > -1:
-                # open_stack.pop()
                 stack_i -= 1
                 if not saving_close:
                     try:
@@ -41,17 +35,14 @@ with open("input.txt", mode="rb", buffering=0) as f:
                     print(-1)
                     sys.exit(0)
             # print(f"{ch=} {open_stack=} {bad_close_idx=} {saving_close=}")
-
         pos += 1
         del ch
 
-# if len(open_stack) == 1:
 if stack_i == 0:
     if bad_close_idx:
         print(-1)
     else:
         print(open_stack[0])
-# elif bad_close_idx and not open_stack:
 elif bad_close_idx and stack_i < 0:
     if saving_close:
         print(min(bad_close_idx, saving_close))
