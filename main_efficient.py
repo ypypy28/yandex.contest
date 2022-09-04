@@ -4,12 +4,13 @@ import array
 
 bad_close_idx = None
 saving_close = None
-open_stack = [0]*578576
-# tmp = [0]*578576
-# open_stack = array.array('L', tmp)
-# del tmp
+# open_stack = [0]*578576
+tmp = [0]*578576
+# open_stack = array.array('L', [0]*578576)
+open_stack = array.array('L', tmp)
+del tmp
 stack_i = -1
-with open("input.txt", mode="rb", buffering=0) as f:
+with open("input.txt", mode="rb", buffering=10000) as f:
     pos = 1
     while True:
         ch = f.read(1)
