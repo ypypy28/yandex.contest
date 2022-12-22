@@ -6,14 +6,15 @@ RightSeats = namedtuple("RightSeats", "F E D")
 
 
 def free_from(position: str, seats: LeftSeats | RightSeats) -> int:
+    n = len(seats)
     if position == "window":
         i = count = 0
-        while i < 3 and seats[i] == '.':
+        while i < n and seats[i] == '.':
             count += 1
             i += 1
         return count
 
-    i = 2
+    i = n-1
     count = 0
     while i > -1 and seats[i] == '.':
         count += 1
@@ -38,7 +39,7 @@ class SeatsIterator:
         return self
 
     def __next__(self):
-        if self.row > len(self._seats):
+        if self.row >= len(self._seats):
             raise StopIteration
         seats_ = self._seats[self.row]
         while self._n_seats > free_from(self._position, seats_):
@@ -92,7 +93,7 @@ if __name__ == "__main__":
             seats[side][i] = sideSeats(*('X' for _ in range(num)), *seats[side][i][num:])
             positions = ' '.join(sorted([f"{i+1}{field}" for _, field in zip(range(num), seats[side][i]._fields)]))
         else:
-            seats[side][i] = sideSeats(*seats[side][i][:3-num], *('X' for _ in range(num)))
+            seats[side][i] = sideSeats(*seats[side][i][:-num], *('X' for _ in range(num)))
             positions = ' '.join(sorted([f"{i+1}{field}" for _, field in zip(range(num), seats[side][i]._fields[::-1])]))
 
         print(f"Passengers can take seats: {positions}")
