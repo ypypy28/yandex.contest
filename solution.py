@@ -11,7 +11,7 @@ def combinations(n, k):
         return 0
 
     sub = n - k
-    if sub > k:
+    if sub < k:
         sub, k = k, sub
 
     rest = 1
