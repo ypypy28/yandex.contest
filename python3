@@ -1,0 +1,30 @@
+2
+1 2
+import sys
+
+
+n = int(input())
+if n == 1:
+    return 0
+
+repr_num = []
+tmp = sys.stdin.read(1)
+diff = cur = prev = 0
+while tmp != '\n':
+    repr_num.append(tmp)
+    tmp = sys.stdin.read(1)
+prev = int(''.join(repr_num))
+repr_num.clear()
+
+while tmp != '':
+    repr_num.append(tmp)
+    tmp = sys.stdin.read(1)
+    if tmp == '\n':
+        cur = int(''.join(repr_num))
+        repr_num.clear()
+        if cur < prev or (cur != prev and diff != 0)):
+            print(-1)
+            sys.exit(0)
+        elif cur > prev:
+            diff = cur - prev
+print(diff)
