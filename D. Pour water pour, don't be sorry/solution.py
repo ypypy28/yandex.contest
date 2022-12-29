@@ -1,3 +1,4 @@
+import bisect
 from collections import namedtuple
 
 
@@ -11,7 +12,6 @@ DURATION_DELTA_TIME = dict()
 cost = 0
 for i in range(N):
     start, end, cost = (int(val) for val in input().split())
-
     COST_DELTA_TIME[start] = COST_DELTA_TIME.get(start, 0) + cost
     DURATION_DELTA_TIME[end] = DURATION_DELTA_TIME.get(end, 0) + end - start
 
@@ -27,52 +27,13 @@ for i, (time, ddur) in enumerate(sorted(DURATION_DELTA_TIME.items()), start=1):
 
 
 def process_request(start: int, end: int, type_: int) -> int:
-    if type_ == 1:
-        return get_total_cost(start, end)
+    prefix_sum = COST_PREFIX_SUM if type_ == 1 else DURATION_PREFIX_SUM
+    start_i = bisect.bisect_left(prefix_sum, (start, 0))
+    start_val = prefix_sum[start_i-1][1]
 
-    return get_total_duration(start, end)
-
-
-def get_total_cost(start: int, end: int) -> int:
-    start_cost = end_cost = prev = None
-    for tc in COST_PREFIX_SUM:
-        if start_cost is None and start <= tc.time <= end:
-            start_cost = prev.cost
-        if start_cost is not None:
-            if tc.time == end:
-                end_cost = tc.cost
-                break
-            elif tc.time > end:
-                end_cost = prev.cost
-                break
-        prev = tc
-
-    if start_cost is None:
-        return 0
-    if end_cost is None:
-        end_cost = COST_PREFIX_SUM[-1].cost
-    return end_cost - start_cost
-
-
-def get_total_duration(start: int, end: int) -> int:
-    start_dur = end_dur = prev = None
-    for td in DURATION_PREFIX_SUM:
-        if start_dur is None and start <= td.time <= end:
-            start_dur = prev.duration
-        if start_dur is not None:
-            if td.time == end:
-                end_dur = td.duration
-                break
-            elif td.time > end:
-                end_dur = prev.duration
-                break
-        prev = td
-
-    if start_dur is None:
-        return 0
-    if end_dur is None:
-        end_dur = DURATION_PREFIX_SUM[-1].duration
-    return end_dur - start_dur
+    end_i = bisect.bisect_right(prefix_sum, (end, prefix_sum[-1][1]))
+    end_val = prefix_sum[end_i-1][1]
+    return end_val - start_val
 
 
 q = int(input())
