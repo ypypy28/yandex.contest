@@ -1,0 +1,5 @@
+1
+co_founder,1
+2
+elon_musk,co_founder,6,200
+ilya_segalovich,co_founder,6,100

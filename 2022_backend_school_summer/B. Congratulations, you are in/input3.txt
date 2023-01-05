@@ -1,0 +1,9 @@
+2
+developer,2
+hacker,3
+5
+anonymous,hacker,6,0
+bjarne_stroustrup,developer,6,1
+julian_assange,hacker,5,100500
+bill_gates,developer,3,1
+guccifer,hacker,2,0

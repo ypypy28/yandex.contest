@@ -1,0 +1,6 @@
+[{"id": 1, "name": "Asus notebook","price": 1564,"date": "23.09.2021"},{"id": 2, "name": "Earpods", "price": 2200, "date": "10.01.2022"},{"id": 3, "name": "Keyboard", "price": 2500, "date": "05.06.2020"}, {"id": 4, "name": "Dell notebook","price": 2300,"date": "23.09.2021"}]
+NAME_CONTAINS notebook
+PRICE_GREATER_THAN 2000
+PRICE_LESS_THAN 2400
+DATE_AFTER 12.09.2021
+DATE_BEFORE 02.01.2022

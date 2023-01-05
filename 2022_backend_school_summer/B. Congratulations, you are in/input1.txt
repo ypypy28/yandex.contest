@@ -1,0 +1,7 @@
+2
+ceo,1
+co_founder,1
+3
+arcady_volozh,ceo,6,100
+elon_musk,ceo,5,0
+ilya_segalovich,co_founder,6,10
