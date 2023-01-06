@@ -1,82 +1,53 @@
-from typing import Literal, Generator, Iterable
+import sys
+import array
 
 
-CHUNK_SIZE = 10
-brackets: dict[str, list[int]] = {"{": [], "}": []}
-
-
-def merged_brackets(open_brs: list[int], close_brs: list[int], ignore: int | None=None
-                    ) -> Generator[Literal["{"] | Literal["}"], None, None]:
-    i = j = 0
-    end_i, end_j = (len(brs) for brs in (open_brs, close_brs))
-    while i < end_i and j < end_j:
-        if open_brs[i] == ignore:
-            i += 1
-            continue
-        elif close_brs[j] == ignore:
-            j += 1
-            continue
-
-        if open_brs[i] < close_brs[j]:
-            yield "{"
-            i += 1
-        else:
-            yield "}"
-            j += 1
-
-    while i < end_i:
-        if open_brs[i] == ignore:
-            i += 1
-            continue
-        yield "{"
-        i += 1
-    while j < end_j:
-        if close_brs[j] == ignore:
-            j += 1
-            continue
-        yield "}"
-        j += 1
-
-
-def extract_br_positions(line: str, pos: int) -> None:
-    for i, ch in enumerate(tmp):
-        for br in brackets:
-            if ch == br:
-                brackets[br].append(pos + i)
-
-
-def is_valid_sequence(seq: Iterable) -> bool:
-    opening_count = 0
-    for br in seq:
-        if br == "{":
-            opening_count += 1
-        else:
-            if not opening_count:
-                return False
-            else:
-                opening_count -= 1
-
-    return True if not opening_count else False
-
-
-with open("input.txt") as f:
+bad_close_idx = None
+saving_close = None
+# open_stack = [0]*578576
+tmp = [0]*578576
+# open_stack = array.array('L', [0]*578576)
+open_stack = array.array('L', tmp)
+del tmp
+stack_i = -1
+with open("input.txt", mode="rb", buffering=10000) as f:
     pos = 1
     while True:
-        tmp = f.read(CHUNK_SIZE)
-        if not tmp:
+        ch = f.read(1)
+        if not ch:
             break
-        extract_br_positions(tmp, pos)
-        pos += CHUNK_SIZE
 
-res_idx = -1
-candidate_idx = max(brackets.values(), key=len)
-# print(f"{brackets=}", ''.join(merged_brackets(brackets["{"], brackets["}"])))
-# print(f"{candidate_idx=}")
-for i in candidate_idx:
-    seq = ''.join(merged_brackets(brackets["{"], brackets["}"], ignore=i))
-    # print(f"ignore={i}, {seq=}")
-    if is_valid_sequence(seq):
-        res_idx = i
-        break
+        if ch == b"{":  # ord("{") = 123
+            stack_i += 1
+            open_stack[stack_i] = pos
+            # print(f"{ch=} {open_stack=} {bad_close_idx=} {saving_close=}")
+        elif ch == b"}":  # ord("}") = 125
+            if stack_i > -1:
+                stack_i -= 1
+                if not saving_close:
+                    try:
+                        saving_close = pos
+                    except ValueError:
+                        pass
+            else:
+                if not bad_close_idx:
+                    bad_close_idx = pos
+                else:
+                    print(-1)
+                    sys.exit(0)
+            # print(f"{ch=} {open_stack=} {bad_close_idx=} {saving_close=}")
+        pos += 1
+        del ch
 
-print(res_idx)
+if stack_i == 0:
+    if bad_close_idx:
+        print(-1)
+    else:
+        print(open_stack[0])
+elif bad_close_idx and stack_i < 0:
+    if saving_close:
+        print(min(bad_close_idx, saving_close))
+    else:
+        print(bad_close_idx)
+else:
+    print(-1)
