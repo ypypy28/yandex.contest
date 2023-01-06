@@ -1,3 +1,4 @@
 .rope*
 .mypy*
 *.png
+.python-version
