@@ -2,6 +2,7 @@
 set -euo pipefail
 
 solution=solution.py
+timeoutvalue=15s
 if [ $# == 1 ] ; then
     solution=$1
 fi
@@ -11,7 +12,6 @@ for filename in $filenames
 do
     i=$((i+1))
     cp $filename input.txt
-    cat input.txt | python3 $solution > res$i.txt
-    diff --color=always --unified res$i.txt output$i.txt && echo "TEST $i OK" || echo "TEST $i Failed"
+    timeout $timeoutvalue python3 $solution < input.txt > res$i.txt && ( diff --color=always --unified res$i.txt output$i.txt && echo "TEST $i OK" || echo "TEST $i Failed"  ) || echo "TEST $i Timeout ($timeoutvalue)"
     rm input.txt res$i.txt
 done
