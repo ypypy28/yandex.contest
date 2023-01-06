@@ -2,37 +2,35 @@ import sys
 import array
 
 
-CHUNK_SIZE = 8192
 bad_close_idx = saving_close = left_open = None
 stack_i = -1
-with open("input.txt", mode="rb", buffering=CHUNK_SIZE) as f:
+with open("input.txt", mode="rb", buffering=0) as f:
     pos = 1
     while True:
-        tmp = f.read(CHUNK_SIZE)
-        if not tmp:
+        ch = f.read(1)
+        if not ch:
             break
 
-        for i, ch in enumerate(tmp):
-            if ch == 123:  # ord("{") = 123
-                stack_i += 1
-                if stack_i == 0:
-                    left_open = i + pos
-            elif ch == 125:  # ord("}") = 125
-                if stack_i > -1:
-                    stack_i -= 1
-                    if not saving_close:
-                        try:
-                            saving_close = i + pos
-                        except ValueError:
-                            pass
+        if ch == b"{":  # ord("{") = 123
+            stack_i += 1
+            if stack_i == 0:
+                left_open = pos
+        elif ch == b"}":  # ord("}") = 125
+            if stack_i > -1:
+                stack_i -= 1
+                if not saving_close:
+                    try:
+                        saving_close = pos
+                    except ValueError:
+                        pass
+            else:
+                if not bad_close_idx:
+                    bad_close_idx = pos
                 else:
-                    if not bad_close_idx:
-                        bad_close_idx = i + pos
-                    else:
-                        print(-1)
-                        sys.exit(0)
-        pos += CHUNK_SIZE
-        del tmp
+                    print(-1)
+                    sys.exit(0)
+        pos += 1
+        del ch
 
 if stack_i == 0:
     if bad_close_idx:
