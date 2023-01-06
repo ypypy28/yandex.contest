@@ -4,25 +4,24 @@ import array
 
 bad_close_idx = saving_close = left_open = None
 stack_i = -1
-with open("input.txt", mode="rb", buffering=0) as f:
+magic = array.array('b')
+with open("input.txt", mode="rb", buffering=65536) as f:
     pos = 1
     while True:
-        ch = f.read(1)
-        if not ch:
+        try:
+            magic.fromfile(f, 1)
+        except EOFError:
             break
 
-        if ch == b"{":  # ord("{") = 123
+        if magic[0] == 123:  # ord("{") = 123
             stack_i += 1
             if stack_i == 0:
                 left_open = pos
-        elif ch == b"}":  # ord("}") = 125
+        elif magic[0] == 125:  # ord("}") = 125
             if stack_i > -1:
                 stack_i -= 1
                 if not saving_close:
-                    try:
-                        saving_close = pos
-                    except ValueError:
-                        pass
+                    saving_close = pos
             else:
                 if not bad_close_idx:
                     bad_close_idx = pos
@@ -30,7 +29,7 @@ with open("input.txt", mode="rb", buffering=0) as f:
                     print(-1)
                     sys.exit(0)
         pos += 1
-        del ch
+        magic.pop()
 
 if stack_i == 0:
     if bad_close_idx:
