@@ -1,0 +1,7 @@
+2
+ear_flying,1
+sun_bathing,1
+3
+cheburashka,ear_flying,11,100
+dambo,ear_flying,10,0
+crocodile_gena,sun_bathing,11,10

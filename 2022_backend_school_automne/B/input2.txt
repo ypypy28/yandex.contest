@@ -1,0 +1,5 @@
+1
+ear_flying,1
+2
+dambo,ear_flying,7,234
+cheburashka,ear_flying,7,123

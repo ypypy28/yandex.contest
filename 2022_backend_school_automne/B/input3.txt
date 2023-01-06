@@ -1,0 +1,9 @@
+2
+cloud_developer,2
+cloud_hacker,3
+5
+anonymous,cloud_hacker,6,0
+bjarne_stroustrup,cloud_developer,6,1
+julian_assange,cloud_hacker,5,100500
+bill_gates,cloud_developer,3,1
+guccifer,cloud_hacker,2,0

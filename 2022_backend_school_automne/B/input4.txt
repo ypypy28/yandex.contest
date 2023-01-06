@@ -1,0 +1,9 @@
+2
+sun_charging,2
+racing,1
+5
+helios,racing,12,135
+acacia,sun_charging,0,5
+cactus,sun_charging,0,1
+ficus,sun_charging,0,4
+palm,sun_charging,0,3
