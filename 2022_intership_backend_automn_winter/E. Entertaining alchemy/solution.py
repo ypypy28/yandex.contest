@@ -1,6 +1,8 @@
+import sys
 from collections import Counter
 
 
+sys.setrecursionlimit(sys.getrecursionlimit()*50)
 class CycleError(Exception):
     ...
 
@@ -34,7 +36,13 @@ def normalize_potion(s: int, prev=None) -> None:
                 POTIONS[s] = None
                 raise CycleError
             if len(POTIONS[ingredient]) != 2:
-                normalize_potion(ingredient, prev)
+                try:
+                    normalize_potion(ingredient, prev)
+                except CycleError as er:
+                    POTIONS[s] = None
+                    prev.remove(s)
+                    raise er
+
             a += POTIONS[s][ingredient]*POTIONS[ingredient][1]
             b += POTIONS[s][ingredient]*POTIONS[ingredient][2]
         POTIONS[s] = Counter({1: a, 2: b})
@@ -48,6 +56,12 @@ for i in range(3, 3+n-2):
     if i in POTIONS[i]:
         POTIONS[i] = None
 
+for i in range(3, 3+n-2):
+    try:
+        normalize_potion(i)
+    except CycleError:
+        continue
+
 q = int(input())
 
 for _ in range(q):
@@ -55,11 +69,12 @@ for _ in range(q):
     if s not in POTIONS or POTIONS[s] is None:
         print(0, end='')
         continue
-    try:
-        normalize_potion(s)
-    except CycleError:
-        print(0, end='')
-        continue
+    # elif len(POTIONS[s]) > 2:
+    #     try:
+    #         normalize_potion(s)
+    #     except CycleError:
+    #         print(0, end='')
+    #         continue
 
     print(1 if POTIONS[s][1] <= x and POTIONS[s][2] <= y else 0, end='')
 print()
