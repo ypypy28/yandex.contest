@@ -1,62 +1,65 @@
 from collections import deque
 
 
-ALL_NODES = dict()
-
-
 class Node:
     root = None
+    ALL_NODES = dict()
+
     def __init__(self, val, parent=None, left=None, right=None):
         self.val = val
         self.parent = parent
         self.left = left
         self.right = right
-        ALL_NODES[val] = self
+        Node.ALL_NODES[val] = self
         if parent is None:
             Node.root = self
 
     def add_node(self, val):
-        if self.left is None:
-            self.left = Node(val, parent=self)
-        elif self.right is None:
-            self.right = Node(val, parent=self)
+        parent_val, right_child = divmod(val, 2)
+        path = []
+        while parent_val != 1:
+            parent_val, to_right = divmod(parent_val, 2)
+            path.append(to_right)
+        node = self
+        while path:
+            if path.pop() == 1:
+                node = node.right
+            else:
+                node = node.left
+        if right_child == 1:
+            node.right = Node(val, parent=node)
         else:
-            self.add_node_children(val)
-
-    def add_node_children(self, val):
-        q = deque((self.left, self.right))
-        node = q.popleft()
-        while True:
-            if None in (node.left, node.right):
-                node.add_node(val)
-                break
-            q.append(node.left)
-            q.append(node.right)
-            node = q.popleft()
+            node.left = Node(val, parent=node)
 
     def swap(self):
         if self.parent is None:
-            return
-        pp = self.parent.parent
+           return
         p = self.parent
-        pl = self.parent.left
+        pp = p.parent
         vl = self.left
         vr = self.right
-        self.parent = pp
+        pl = p.left
+        pr = p.right
+
         if pp is not None:
             if p is pp.left:
                 pp.left = self
-            else:
+                self.parent = pp
+            elif p is pp.right:
                 pp.right = self
+                self.parent = pp
         else:
             Node.root = self
+            self.parent = None
+
         p.parent = self
+
         if self is pl:
             self.left = p
             p.left = vl
             if vl is not None:
                 vl.parent = p
-        else:
+        elif self is pr:
             self.right = p
             p.right = vr
             if vr is not None:
@@ -75,7 +78,7 @@ class Node:
         return res
 
     def __str__(self):
-        return ' '.join(self.lvr())
+        return ' '.join(Node.root.lvr())
 
 
 n, q = [int(x) for x in input().split()]
@@ -85,5 +88,5 @@ for i in range(2, n+1):
 
 vs = [int(x) for x in input().split()]
 for v in vs:
-    ALL_NODES[v].swap()
+    Node.ALL_NODES[v].swap()
 print(Node.root)
