@@ -41,14 +41,12 @@ def normalize_potion(s: int, prev=None) -> None:
         prev.remove(s)
 
 
-i = 3
-for _ in range(n-2):
+for i in range(3, 3+n-2):
     _, *p = [int(m) for m in input().split()]
     POTIONS[i] = Counter(p)
     POTIONS[i].update(empty_base)
     if i in POTIONS[i]:
         POTIONS[i] = None
-    i += 1
 
 q = int(input())
 
@@ -56,14 +54,12 @@ for _ in range(q):
     x, y, s = [int(m) for m in input().split()]
     if s not in POTIONS or POTIONS[s] is None:
         print(0, end='')
-    elif len(POTIONS[s]) == 2:
-        print(1 if POTIONS[s][1] <= x and POTIONS[s][2] <= y else 0, end='')
-    else:
-        try:
-            normalize_potion(s)
-        except CycleError:
-            print(0, end='')
-            continue
+        continue
+    try:
+        normalize_potion(s)
+    except CycleError:
+        print(0, end='')
+        continue
 
-        print(1 if POTIONS[s][1] <= x and POTIONS[s][2] <= y else 0, end='')
+    print(1 if POTIONS[s][1] <= x and POTIONS[s][2] <= y else 0, end='')
 print()
