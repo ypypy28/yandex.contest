@@ -16,20 +16,10 @@ class Node:
 
     def add_node(self, val):
         parent_val, right_child = divmod(val, 2)
-        path = []
-        while parent_val != 1:
-            parent_val, to_right = divmod(parent_val, 2)
-            path.append(to_right)
-        node = self
-        while path:
-            if path.pop() == 1:
-                node = node.right
-            else:
-                node = node.left
         if right_child == 1:
-            node.right = Node(val, parent=node)
+            Node.ALL_NODES[parent_val].right = Node(val, Node.ALL_NODES[parent_val])
         else:
-            node.left = Node(val, parent=node)
+            Node.ALL_NODES[parent_val].left = Node(val, Node.ALL_NODES[parent_val])
 
     def swap(self):
         if self.parent is None:
