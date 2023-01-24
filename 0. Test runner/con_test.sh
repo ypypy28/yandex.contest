@@ -24,7 +24,7 @@ seconds_since() {
     printf $(( `date +%s` - $1 )) 
 }
 
-while getopts ":hf:t:" Option
+while getopts ":ht:" Option
 do
     case $Option in
         h) usage ; exit 0 ;;
