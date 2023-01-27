@@ -48,16 +48,16 @@ fi
 i=0
 filenames="input*.txt"
 if [ ! $onlytest -eq 0 ] ; then
-    i=$(( $onlytest-1 ))
+    i=$(( $onlytest - 1 ))
     filenames="input${onlytest}.txt"
 fi
 
 for filename in $filenames
 do
     i=$((i+1))
-    cp $filename input.txt
+    cp input${i}.txt input.txt
     start_time=$(date +%s)
-    timeout ${timeoutvalue}s python3 $solution < input.txt > res$i.txt && ( diff --color=always --unified res$i.txt output$i.txt && echo -en "TEST $i \033[32mOK\033[39m" || echo -en "TEST $i \033[31mFailed\033[39m"  ) || echo -en "TEST $i \033[33mTimeout\033[39m (${timeoutvalue}s)"
+    timeout ${timeoutvalue}s python3 $solution < input.txt > res$i.txt && ( diff --color=always --unified res$i.txt output${i}.txt && echo -en "TEST $i \033[32mOK\033[39m" || echo -en "TEST $i \033[31mFailed\033[39m"  ) || echo -en "TEST $i \033[33mTimeout\033[39m (${timeoutvalue}s)"
     echo " (took $(seconds_since $start_time) seconds)"
     rm input.txt res$i.txt
 done
