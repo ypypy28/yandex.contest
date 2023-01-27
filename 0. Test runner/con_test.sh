@@ -3,17 +3,19 @@ set -euo pipefail
 
 solution=solution.py
 timeoutvalue=15
+onlytest=0
 
 usage () {
     script_name=$(basename $0)
     cat << EOUSAGE
 ${script_name^^} - test runner of your python solutions of the Yandex Contest tasks
 
-Usage:  ${script_name} [ -h ] [ -t NUM ] [ SCRIPT_NAME ]
+Usage:  ${script_name} [ -h ] [ -t NUM ] [ -n NUM ] [ SCRIPT_NAME ]
 
 Where:
     -h              show this help message and exit
     -t NUM          set the timeout value in seconds (default: $timeoutvalue)
+    -n NUM          run only NUM test, if 0 runs all the tests (default: 0)
     SCRIPT_NAME     name of the file with your solution (default: $solution)
 
 pkg home page: https://github.com/ypypy28/yandex.contest
@@ -24,11 +26,12 @@ seconds_since() {
     printf $(( `date +%s` - $1 )) 
 }
 
-while getopts ":ht:" Option
+while getopts ":hn:t:" Option
 do
     case $Option in
         h) usage ; exit 0 ;;
         t) timeoutvalue=$OPTARG ;;
+        n) onlytest=$OPTARG ;;
         \?) echo BAD OPTION: ${@: $(( $OPTIND-1 ))} >&2 ; usage ; exit 1 ;;
     esac
 done
@@ -44,6 +47,11 @@ fi
 
 i=0
 filenames="input*.txt"
+if [ ! $onlytest -eq 0 ] ; then
+    i=$(( $onlytest-1 ))
+    filenames="input${onlytest}.txt"
+fi
+
 for filename in $filenames
 do
     i=$((i+1))
