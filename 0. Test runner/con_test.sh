@@ -1,6 +1,11 @@
 #!/bin/env bash
 set -euo pipefail
 
+declare -r NORMAL_COLOR="\033[39m"
+declare -r RED_COLOR="\033[31m"
+declare -r GREEN_COLOR="\033[32m"
+declare -r YELLOW_COLOR="\033[33m"
+
 solution=solution.py
 timeoutvalue=15
 onlytest=0
@@ -57,7 +62,7 @@ do
     i=$((i+1))
     cp input${i}.txt input.txt
     start_time=$(date +%s)
-    timeout ${timeoutvalue}s python3 $solution < input.txt > res$i.txt && ( diff --color=always --unified res$i.txt output${i}.txt && echo -en "TEST $i \033[32mOK\033[39m" || echo -en "TEST $i \033[31mFailed\033[39m"  ) || echo -en "TEST $i \033[33mTimeout\033[39m (${timeoutvalue}s)"
+    timeout ${timeoutvalue}s python3 $solution < input.txt > res$i.txt && ( diff --color=always --unified res$i.txt output${i}.txt && echo -en "TEST $i ${GREEN_COLOR}OK${NORMAL_COLOR}" || echo -en "TEST $i ${RED_COLOR}Failed${NORMAL_COLOR}"  ) || echo -en "TEST $i ${YELLOW_COLOR}Timeout${NORMAL_COLOR} (${timeoutvalue}s)"
     echo " (took $(seconds_since $start_time) seconds)"
     rm input.txt res$i.txt
 done
