@@ -11,28 +11,33 @@ if not line:
 end = len(line)
 cur = line[0]
 i = max_count = count = 1
-skip = []
+skipped = 0
 while i < end:
     # print(f"{i=} ", end='')
     if line[i] == cur:
         count += 1
     else:
-        if len(skip) < k:
-            skip.append(line[i])
+        if skipped < k:
+            skipped += 1
             count += 1
         else:
+            if max_count < count:
+                max_count = count
             count = 1
-            cur, *skip = skip
+            skipped = 0
             i = i - k + 1
-    if max_count < count:
-        max_count = count
+            cur = line[i-1]
+
 
     i += 1
     # print(f"{i=} {skip= }", end='')
-    if i == end and skip:
-        i = i - len(skip) + 1
-        cur, *skip = skip
+    if i == end and skipped != 0 and max_count < skipped:
+        i = i - skipped + 1
+        skipped = 0
+        cur = line[i-1]
         count = 1
     # print(f"{i=}")
 
+if max_count < count:
+    max_count = count
 print(max_count)
