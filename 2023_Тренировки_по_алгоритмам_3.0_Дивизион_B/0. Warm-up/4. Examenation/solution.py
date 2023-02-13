@@ -1,3 +1,13 @@
+def get_row_side(target_num):
+    target_row, target_side = divmod(target_num, 2)
+    if target_side == 1:
+        target_row += 1
+    else:
+        target_side = 2
+
+    return target_row, target_side
+
+
 n, k, row, side = [int(input()) for _ in range(4)]
 
 petya_num = (row-1)*2 + side
@@ -9,10 +19,6 @@ if vasya_num > n:
 if vasya_num < 1:
     print(-1)
 else:
-    # print(f"{(petya_num, vasya_num)=}")
-    vasya_row, vasya_side = divmod(vasya_num, 2)
-    if vasya_side == 1:
-        vasya_row += 1
-    else:
-        vasya_side = 2
-    print(vasya_row, vasya_side)
+    res = min([get_row_side(x) for x in (vasya_num, petya_num - k)],
+              key=lambda x: abs(row -x[0]))
+    print(*res)
