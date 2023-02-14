@@ -4,40 +4,28 @@ import sys
 k = int(input())
 line = input()
 
-if not line:
-    print(0)
-    sys.exit(0)
-
-end = len(line)
-cur = line[0]
-i = max_count = count = 1
-skipped = 0
-while i < end:
-    # print(f"{i=} ", end='')
-    if line[i] == cur:
-        count += 1
+end = len(line) - 1
+left = right = skipped = max_seq = 0
+# print(k, line)
+while right < end:
+    if line[left] == line[right+1]:
+        right += 1
     else:
         if skipped < k:
+            right += 1
             skipped += 1
-            count += 1
         else:
-            if max_count < count:
-                max_count = count
-            count = 1
+            seq = right - left + 1
+            if max_seq < seq:
+                max_seq = seq
+            left += 1 # max(left+1, right-k-1)
+            right = left
             skipped = 0
-            i = i - k + 1
-            cur = line[i-1]
+    # print(f"{left=} {right=} {skipped=} {line[left:right+1]=} {right-left+1=}")
 
+last = right - left + 1
+if last > max_seq:
+    max_seq = last
 
-    i += 1
-    # print(f"{i=} {skip= }", end='')
-    if i == end and skipped != 0 and max_count < skipped:
-        i = i - skipped + 1
-        skipped = 0
-        cur = line[i-1]
-        count = 1
-    # print(f"{i=}")
+print(max_seq)
 
-if max_count < count:
-    max_count = count
-print(max_count)
