@@ -4,10 +4,10 @@ import sys
 k = int(input())
 line = input()
 
-end = len(line) - 1
+end = len(line)
 left = right = skipped = max_seq = 0
 # print(k, line)
-while right < end:
+while right+1 < end:
     if line[left] == line[right+1]:
         right += 1
     else:
@@ -23,7 +23,7 @@ while right < end:
             skipped = 0
     # print(f"{left=} {right=} {skipped=} {line[left:right+1]=} {right-left+1=}")
 
-last = right - left + 1
+last = min(right - left + 1 + k - skipped, end)
 if last > max_seq:
     max_seq = last
 
