@@ -42,12 +42,16 @@ while right < end:
         max_seq = seq
 
     # print(f"{cur=} {left=} {right=} {skipped=} {line[left:right]=}")
-    # if right < end:
-    #     for i in range(right, left, -1):
-    #         if line[i] != cur:
-    #             left = i
+    new_left = left + 1
+    if right < end:
+        for i in range(right-k, left, -1):
+            if line[i] != cur:
+                new_left = i
+                break
 
-    left = max(left + 1, right - k-2)
+    # left = max(left + 1, right - k - 25)
+    # left = max(left + 1, new_left)
+    left = new_left
 
     right = left + 1 + k
 
