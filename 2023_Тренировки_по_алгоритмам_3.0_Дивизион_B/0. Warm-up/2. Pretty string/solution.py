@@ -31,7 +31,19 @@ while right+1 < end:
             else:
                 skipped = sum(counter.values()) - counter[line[left]]
 
-last = min(right - left + 1 + k - skipped, end)
+unskipped = k - skipped
+seq = right - left + 1
+potential = max(counter, key=lambda x: counter[x])
+if line[left] != potential:
+    skipped = seq - counter[potential]
+    unskipped = k - skipped
+
+last = min(seq + unskipped, end)
+
+# print(line)
+# print(f"{last=} {skipped=} {line[left:right+1]=}\n{counter=}")
+# print(f"{max(counter, key=lambda x: counter[x])=}")
+# print(max(sorted(counter.items(), key=lambda x: x[1])))
 if last > max_seq:
     max_seq = last
 
