@@ -1,13 +1,15 @@
 m, n = [int(input()) for _ in range(2)]
 
-hd = [None]*(m+1)
-oses = set()
+hd = set()
 for os in range(n):
-    oses.add(os)
     a, b = [int(val) for val in input().split()]
-    for i in range(a, b+1):
-        cur_os = hd[i]
-        if cur_os in oses:
-            oses.remove(cur_os)
-        hd[i] = os
-print(len(oses))
+    corrupted = []
+    for prev_os in hd:
+        if a in prev_os or b in prev_os:
+            corrupted.append(prev_os)
+    for c in corrupted:
+        hd.remove(c)
+
+    hd.add(range(a, b+1))
+
+print(len(hd))
