@@ -12,8 +12,7 @@ if client_recieved - send < 0:
     client_recieved += SECONDS_IN_DAY
 
 latency, round_factor = divmod(client_recieved - send, 2)
-if round_factor >= 0.5:
-    latency += 1
+latency += round_factor
 
 now = server_recieved + latency
 if now > SECONDS_IN_DAY:
