@@ -10,29 +10,42 @@ def insert(lst: list, val: int) -> None:
 
 
 def pop(lst: list) -> int:
-    if len(lst) == 1:
+    end = len(lst)
+    if end == 1:
         return lst.pop()
 
     res = lst[0]
     lst[0] = lst[-1]
     i = 0
     # sift part
-    while (left_child:=(i << 1)) < len(lst):
-        if lst[left_child] > lst[i]:
-            lst[i], lst[left_child] = lst[left_child], lst[i]
-            i = left_child
-        else:
-            right_child = left_child + 1
-            if right_child >= len(lst):
-                break
-            if lst[right_child] > lst[i]:
-                lst[i], lst[right_child] = lst[right_child], lst[i]
-                i = right_child
+    while (left_child:=(i << 1)) < end:
+        right_child = left_child + 1
+        if right_child >= end:
+            if lst[left_child] > lst[i]:
+                lst[i], lst[left_child] = lst[left_child], lst[i]
+                i = left_child
             else:
                 break
+        else:
+            if lst[left_child] > lst[right_child]:
+                if lst[left_child] > lst[i]:
+                    lst[i], lst[left_child] = lst[left_child], lst[i]
+                    i = left_child
+                elif lst[right_child] > lst[i]:
+                    lst[i], lst[right_child] = lst[right_child], lst[i]
+                    i = right_child
+                else:
+                    break
+            else:
+                if lst[right_child] <= lst[i]:
+                    break
+                else:
+                    lst[i], lst[right_child] = lst[right_child], lst[i]
+                    i = right_child
 
     lst.pop()
     return res
+
 
 n = int(input())
 
@@ -43,4 +56,3 @@ for _ in range(n):
         print(pop(heap))
     else:
         insert(heap, int(cmd[2:]))
-
