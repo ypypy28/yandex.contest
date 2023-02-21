@@ -2,7 +2,7 @@ def insert(lst: list, val: int) -> None:
     i = len(lst)
     lst.append(val)
     while i != 0:
-        parent = (i >> 1)
+        parent = ((i+1) >> 1) -1
         if lst[parent] >= lst[i]:
             break
         lst[i], lst[parent] = lst[parent], lst[i]
@@ -18,7 +18,7 @@ def pop(lst: list) -> int:
     lst[0] = lst[-1]
     i = 0
     # sift part
-    while (left_child:=(i << 1)) < end:
+    while (left_child:=(i << 1)+1) < end:
         right_child = left_child + 1
         if right_child >= end:
             if lst[left_child] > lst[i]:
