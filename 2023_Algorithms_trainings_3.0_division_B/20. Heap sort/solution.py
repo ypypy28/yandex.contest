@@ -1,14 +1,20 @@
-def insert(lst: list, val: int, size: int) -> None:
-    i = size
+def heapify(lst: list[int]) -> None:
+    full_size = len(lst)
+    for end in range(1, full_size):
+        insert_from_end(lst, end)
+
+
+def insert_from_end(lst: list[int], end: int) -> None:
+    i = end
     while i != 0:
-        parent = (i >> 1)
+        parent = ((i+1) >> 1) - 1
         if lst[parent] >= lst[i]:
             break
         lst[i], lst[parent] = lst[parent], lst[i]
         i = parent
 
 
-def put_max_at(i: int, lst: list) -> None:
+def put_max_at(i: int, lst: list[int]) -> None:
     if i == 0:
         return
     end = i
@@ -16,7 +22,7 @@ def put_max_at(i: int, lst: list) -> None:
     lst[0] = lst[i]
     i = 0
     # sift part
-    while (left_child:=(i << 1)) < end:
+    while (left_child:=(i << 1)+1) < end:
         right_child = left_child + 1
         if right_child >= end:
             if lst[left_child] > lst[i]:
@@ -44,18 +50,15 @@ def put_max_at(i: int, lst: list) -> None:
     return
 
 
-def heapify(lst: list) -> None:
-    full_size = len(lst)
-    for i in range(full_size):
-        val = lst[i]
-        insert(lst, val, full_size -1 -i)
+def heap_sort(lst: list[int]) -> None:
+    heapify(lst)
+    n = len(lst)
+    while n != 1:
+        n -= 1
+        put_max_at(n, lst)
 
 
 n = int(input())
 arr = [int(val) for val in input().split()]
-heapify(arr)
-while n != 1:
-    n -= 1
-    put_max_at(n, arr)
-
-print(' '.join(f'{x}' for x in arr))
+heap_sort(arr)
+print(*arr)
