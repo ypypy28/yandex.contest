@@ -1,15 +1,32 @@
-ops = (lambda x: x+1, lambda x: x*2, lambda x: x*3)
+ops = (lambda x: None if x % 2 != 0 else x >> 1,
+       lambda x: None if x % 3 != 0 else x // 3,
+       lambda x: x-1)
 n = int(input())
 
-nums = [(1, (0,))]
+nums = [n]
+prevs = [None]
 
 i = 0
-num, prev = nums[i]
-while num != n:
+num, prev = nums[i], prevs[i]
+while num != 1:
     for op in ops:
-        nums.append((op(num), (*prev, len(nums))))
-    i += 1
-    num, prev = nums[i]
+        num = op(nums[i])
+        if num is not None:
+            nums.append(num)
+            prevs.append(i)
+            if num == 1:
+                prev = len(nums)-1
+                break
+    else:
+        i += 1
+        continue
+    break
 
-print(len(nums[i][1])-1)
-print(*[nums[j][0] for j in nums[i][1]])
+res = []
+while prev is not None:
+    res.append(str(nums[prev]))
+    prev = prevs[prev]
+
+print(len(res)-1 if res else 0,
+      ' '.join(res) or 1,
+      sep='\n')
