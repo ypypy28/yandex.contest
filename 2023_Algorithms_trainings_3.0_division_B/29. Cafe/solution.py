@@ -17,14 +17,13 @@ for j in range(1, n+1):
     money += costs[j]
     dp[j][coupons] = DP(money, tuple())
 
-
 for day in range(1, n+1):
     for coupon in range(0, n):
         if dp[day][coupon] is not unprocessed:
             break
         cost_without_coupon = dp[day-1][coupon].money + costs[day]
         if costs[day] > 100 and day > 1:
-            cost_without_coupon = dp[day-1][coupon-1].money + costs[day]
+            cost_without_coupon = min(dp[day-1][coupon-1].money, dp[day-1][coupon].money) + costs[day]
         cost_with_coupon = dp[day-1][coupon+1].money
         if cost_with_coupon < cost_without_coupon:
             money = cost_with_coupon
@@ -33,11 +32,9 @@ for day in range(1, n+1):
             money = cost_without_coupon
             coupon_days = dp[day-1][coupon].coupon_days
             if costs[day] > 100 and day > 1:
-                coupon_days = dp[day-1][coupon-1].coupon_days
+                if dp[day-1][coupon-1].money < dp[day-1][coupon].money:
+                    coupon_days = dp[day-1][coupon-1].coupon_days
         dp[day][coupon] = DP(money, coupon_days)
-
-# print()
-# print('\n'.join(' '.join(f"{x.money:>3}" for x in line) for line in dp), sep='\n')
 
 
 min_sum = min(dp[n])
