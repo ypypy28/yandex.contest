@@ -7,7 +7,8 @@ DP = namedtuple("DP", "money coupon_days")
 n = int(input())
 costs = [0] + [int(input()) for _ in range(n)]
 
-dp = [[DP(inf, tuple()) for _ in range(n+1)] for _ in range(n+1)]
+unprocessed = DP(inf, tuple())
+dp = [[unprocessed for _ in range(n+1)] for _ in range(n+1)]
 dp[0][0] = DP(0, tuple())
 coupons = money = 0
 for j in range(1, n+1):
@@ -19,13 +20,13 @@ for j in range(1, n+1):
 
 for day in range(1, n+1):
     for coupon in range(0, n):
-        if dp[day][coupon].money != inf:
+        if dp[day][coupon] is not unprocessed:
             break
         cost_without_coupon = dp[day-1][coupon].money + costs[day]
         if costs[day] > 100 and day > 1:
             cost_without_coupon = dp[day-1][coupon-1].money + costs[day]
         cost_with_coupon = dp[day-1][coupon+1].money
-        if cost_with_coupon < cost_without_coupon and coupon != n:
+        if cost_with_coupon < cost_without_coupon:
             money = cost_with_coupon
             coupon_days = (*dp[day-1][coupon+1].coupon_days, day)
         else:
