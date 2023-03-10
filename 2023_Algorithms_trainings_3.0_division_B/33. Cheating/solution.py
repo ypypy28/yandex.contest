@@ -10,28 +10,32 @@ for _ in range(m):
 groups = (set(), set())
 visited = set()
 
-stack = [1]
+stack = []
 group = 0
 bad = False
 for i in range(1, n+1):
     if i in visited:
         continue
-    stack.append(i)
+    stack.append((i, group))
+    bad = False
     while stack:
-        cur = stack.pop()
+        cur, group = stack.pop()
+        next_group = 1 - group
         if cur in visited:
             continue
         visited.add(cur)
-        group = 1 - group
+        if cur in groups[next_group]:
+            bad = True
+            break
         groups[group].add(cur)
 
-        bad = False
         for s in students[cur]:
             if s not in visited:
-                stack.append(s)
+                stack.append((s, next_group))
             elif s in groups[group]:
                 bad = True
                 break
+
         if bad:
             break
     if bad:
@@ -39,7 +43,3 @@ for i in range(1, n+1):
         break
 else:
     print("YES")
-
-
-# print(students)
-# print(groups)
