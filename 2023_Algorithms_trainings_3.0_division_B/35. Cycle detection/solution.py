@@ -15,46 +15,38 @@ for i in range(n):
 stack = []
 
 bad = False
-cycle = []
+cycle = None
 for i in range(1, n+1):
     if vertices[i][1] != WHITE:
         continue
-    stack.append((i, None))
-    while stack and not bad:
+    stack.append((i, tuple()))
+    while stack:
         cur, prev = stack.pop()
-        # print(f"{stack=} {cur=} {prev=} {vertices[cur]=} vertices[prev]={vertices[prev] if prev is not None else ''}")
         if vertices[cur][1] == WHITE:
             vertices[cur][1] = GRAY
 
         for v in vertices[cur][0]:
-            if vertices[v][1] == GRAY and v != prev:
+            if vertices[v][1] == GRAY and v != prev[0]:
                 bad = True
-                cycle.append(str(v))
-                prev = cur
-                while v != cur:
-                    for next_v in vertices[v][0]:
-                        if vertices[next_v][1] == GRAY and next_v != prev:
-                            prev = v
-                            v = next_v
-                            break
-                    cycle.append(str(v))
+                end_indx = prev.index(v)
+                cycle = [str(x) for x in (cur, *prev[:end_indx+1])]
                 break
+        if bad:
+            break
 
         if all(vertices[v] in (GRAY, BLACK) for v in vertices[cur][0]):
             if stack:
-                val = stack.pop()
+                val, _ = stack.pop()
                 if vertices[val][1] != BLACK:
                     vertices[val][1] = BLACK
         else:
             for v in vertices[cur][0]:
                 if vertices[v][1] == WHITE:
-                    stack.append((v, cur))
+                    stack.append((v, (cur, *prev)))
     if bad:
         break
 
-# print(*(f"{i=} {vertices[i]}" for i in range(1, n+1)), sep='\n')
-# print(cycle)
-if not cycle:
+if cycle is None:
     print("NO")
 else:
     print("YES", len(cycle), ' '.join(cycle), sep='\n')
