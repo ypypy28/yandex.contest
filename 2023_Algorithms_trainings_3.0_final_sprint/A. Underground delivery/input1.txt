@@ -1,0 +1,8 @@
+7
+add 10 oil
+add 20 coal
+add 5 oil
+get coal
+get oil
+add 1 coal
+get coal
