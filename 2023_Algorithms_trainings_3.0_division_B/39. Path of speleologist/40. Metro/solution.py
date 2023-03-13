@@ -33,20 +33,39 @@ for line in stations[a][1]:
 #     q.clear()
 
 while q:
-    cur_st, prev_line, cur_transfer = q.popleft()
+    st, cur_line, transfer = q.popleft()
 
-    new_transfer = cur_transfer+1
+    for s in lines[cur_line]:
+        if stations[s][2] > transfer:
+            stations[s][2] = transfer
+            q.append((s, cur_line, transfer))
 
-    for s in stations[cur_st][0]:
-        if s in lines[prev_line]:
-            if stations[s][2] > cur_transfer:
-                stations[s][2] = cur_transfer
-                q.append((s, prev_line, cur_transfer))
-        else:
-            if stations[s][2] > new_transfer:
-                stations[s][2] = new_transfer
-                for line in stations[s][1]:
-                    q.append((s, line, new_transfer))
+    transfer += 1
+
+    for line in stations[st][1]:
+        if line != cur_line:
+            for s in lines[line]:
+                if stations[s][2] > transfer:
+                    stations[s][2] = transfer
+                    q.append((s, cur_line, transfer))
+
+    # print(f"{st=} {cur_line=} {s=} {q=}")
+    # print(*(f"{i} {s}" for i,s in enumerate(stations)), sep='\n')
+    # cur_st, prev_line, cur_transfer = q.popleft()
+
+    # new_transfer = cur_transfer+1
+
+
+    # for s in stations[cur_st][0]:
+    #     if s in lines[prev_line]:
+    #         if stations[s][2] > cur_transfer:
+    #             stations[s][2] = cur_transfer
+    #             q.append((s, prev_line, cur_transfer))
+    #     else:
+    #         if stations[s][2] > new_transfer:
+    #             stations[s][2] = new_transfer
+    #             for line in stations[s][1]:
+    #                 q.append((s, line, new_transfer))
         # print(f"{cur_st=} {prev_line=} {s=} {q=}")
         # print(*(f"{i} {s}" for i,s in enumerate(stations)), sep='\n')
 
